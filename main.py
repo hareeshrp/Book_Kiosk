@@ -5,8 +5,12 @@ from database import Database
 from kiosk_logic import KioskLogic
 
 def main():
+    # Configuration
+    api_url = "https://openlibrary.org/api/books"  # You can change this to a different API if needed
+    api_key = None  # Add your API key here if required
+
     scanner = BarcodeScanner()
-    book_api = BookAPI()
+    book_api = BookAPI(api_url, api_key)
     db = Database('books.db')
     kiosk = KioskLogic(scanner, book_api, db)
 
