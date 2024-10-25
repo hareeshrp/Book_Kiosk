@@ -14,9 +14,16 @@ class BookAPI:
         if self.api_key:
             params['key'] = self.api_key
         
+        print(f"Requesting book info for ISBN: {isbn}")
+        print(f"URL: {self.base_url}")
+        print(f"Params: {params}")
+        
         response = requests.get(self.base_url, params=params)
+        print(f"Response status code: {response.status_code}")
+        
         if response.status_code == 200:
             data = response.json()
+            print(f"Response data: {data}")
             book_data = data.get(f"ISBN:{isbn}")
             if book_data:
                 return {

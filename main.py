@@ -42,8 +42,18 @@ def main():
         
         if barcode:
             print(f"Barcode scanned: {barcode}")
+            print(f"Barcode type: {type(barcode)}")
+            print(f"Barcode length: {len(barcode)}")
+            
+            # Test the barcode directly with the book API
+            test_book_info = book_api.get_book_info(barcode)
+            if test_book_info:
+                print(f"Book API test successful. Book info: {test_book_info}")
+            else:
+                print("Book API test failed. No book info found.")
+            
             kiosk.process_transaction(barcode)
-        else:
+        elif barcode is None:
             user_input = input().lower()
             if user_input == 'v':
                 db.print_database_contents()
@@ -52,6 +62,8 @@ def main():
                 break
             elif user_input:
                 print("Invalid input. Please try again.")
+        else:
+            print("Invalid barcode scanned. Please try again.")
 
 if __name__ == "__main__":
     main()

@@ -15,9 +15,19 @@ class BarcodeScanner:
                         data = evdev.categorize(event)
                         if data.keystate == 1:  # Key down event
                             if data.scancode == 28:  # Enter key
-                                return barcode
+                                return self.clean_isbn(barcode)
                             else:
-                                barcode += evdev.ecodes.KEY[data.scancode]
+                                key = evdev.ecodes.KEY[data.scancode]
+                                if key.isdigit() or key in 'X':
+                                    barcode += key
             else:
                 # Timeout occurred
                 return None
+
+    def clean_isbn(self, isbn):
+        # Remove any non-digit or 'X' characters
+        cleaned = ''.join(char for char in isbn if char.isdigit() or char == 'X')
+        # Ensure it's either 10 or 13 digits long
+        if len(cleaned) in (10, 13):
+            return cleaned
+        return None
