@@ -38,32 +38,35 @@ def main():
     
     while True:
         print("\nWaiting for input or barcode scan...")
-        barcode = scanner.read_barcode(timeout=0.1)
-        
-        if barcode:
-            print(f"Barcode scanned: {barcode}")
-            print(f"Barcode type: {type(barcode)}")
-            print(f"Barcode length: {len(barcode)}")
+        try:
+            barcode = scanner.read_barcode(timeout=0.1)
             
-            # Test the barcode directly with the book API
-            test_book_info = book_api.get_book_info(barcode)
-            if test_book_info:
-                print(f"Book API test successful. Book info: {test_book_info}")
+            if barcode:
+                print(f"Barcode scanned: {barcode}")
+                print(f"Barcode type: {type(barcode)}")
+                print(f"Barcode length: {len(barcode)}")
+                
+                # Test the barcode directly with the book API
+                test_book_info = book_api.get_book_info(barcode)
+                if test_book_info:
+                    print(f"Book API test successful. Book info: {test_book_info}")
+                else:
+                    print("Book API test failed. No book info found.")
+                
+                kiosk.process_transaction(barcode)
+            elif barcode is None:
+                user_input = input().lower()
+                if user_input == 'v':
+                    db.print_database_contents()
+                elif user_input == 'q':
+                    print("\nShutting down kiosk...")
+                    break
+                elif user_input:
+                    print("Invalid input. Please try again.")
             else:
-                print("Book API test failed. No book info found.")
-            
-            kiosk.process_transaction(barcode)
-        elif barcode is None:
-            user_input = input().lower()
-            if user_input == 'v':
-                db.print_database_contents()
-            elif user_input == 'q':
-                print("\nShutting down kiosk...")
-                break
-            elif user_input:
-                print("Invalid input. Please try again.")
-        else:
-            print("Invalid barcode scanned. Please try again.")
+                print("Invalid barcode scanned. Please try again.")
+        except Exception as e:
+            print(f"An error occurred: {str(e)}")
 
 if __name__ == "__main__":
     main()

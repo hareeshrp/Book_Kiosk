@@ -18,17 +18,28 @@ class BookAPI:
         print(f"URL: {self.base_url}")
         print(f"Params: {params}")
         
-        response = requests.get(self.base_url, params=params)
-        print(f"Response status code: {response.status_code}")
+        try:
+            response = requests.get(self.base_url, params=params)
+            print(f"Response status code: {response.status_code}")
+            print(f"Response content: {response.text}")
+            
+            if response.status_code == 200:
+                data = response.json()
+                print(f"Response data: {data}")
+                book_data = data.get(f"ISBN:{isbn}")
+                if book_data:
+                    result = {
+                        "title": book_data.get("title"),
+                        "author": book_data.get("authors", [{}])[0].get("name"),
+                        "isbn": isbn
+                    }
+                    print(f"Extracted book info: {result}")
+                    return result
+                else:
+                    print(f"No book data found for ISBN:{isbn}")
+            else:
+                print(f"Error response: {response.text}")
+        except Exception as e:
+            print(f"An error occurred: {str(e)}")
         
-        if response.status_code == 200:
-            data = response.json()
-            print(f"Response data: {data}")
-            book_data = data.get(f"ISBN:{isbn}")
-            if book_data:
-                return {
-                    "title": book_data.get("title"),
-                    "author": book_data.get("authors", [{}])[0].get("name"),
-                    "isbn": isbn
-                }
         return None
