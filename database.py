@@ -55,3 +55,25 @@ class Database:
         withdrawals = self.cursor.fetchone()[0]
         
         return deposits - withdrawals
+
+    def view_books(self):
+        self.cursor.execute('SELECT * FROM books')
+        return self.cursor.fetchall()
+
+    def view_transactions(self):
+        self.cursor.execute('''
+            SELECT t.id, b.title, b.author, t.action, t.timestamp
+            FROM transactions t
+            JOIN books b ON t.book_id = b.id
+            ORDER BY t.timestamp DESC
+        ''')
+        return self.cursor.fetchall()
+
+    def print_database_contents(self):
+        print("Books:")
+        for book in self.view_books():
+            print(f"ID: {book[0]}, ISBN: {book[1]}, Title: {book[2]}, Author: {book[3]}")
+        
+        print("\nTransactions:")
+        for transaction in self.view_transactions():
+            print(f"ID: {transaction[0]}, Book: {transaction[1]} by {transaction[2]}, Action: {transaction[3]}, Time: {transaction[4]}")

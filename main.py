@@ -15,10 +15,15 @@ def main():
     kiosk = KioskLogic(scanner, book_api, db)
 
     print("Book Exchange Kiosk is ready!")
+    print("Press 'v' to view database contents, or any other key to continue.")
     
     while True:
         try:
-            kiosk.process_transaction()
+            user_input = input().lower()
+            if user_input == 'v':
+                db.print_database_contents()
+            else:
+                kiosk.process_transaction()
             time.sleep(1)  # Small delay to prevent constant polling
         except KeyboardInterrupt:
             print("\nShutting down kiosk...")
