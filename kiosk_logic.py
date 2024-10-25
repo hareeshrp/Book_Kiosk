@@ -1,6 +1,5 @@
 class KioskLogic:
-    def __init__(self, scanner, book_api, database):
-        self.scanner = scanner
+    def __init__(self, book_api, database):
         self.book_api = book_api
         self.db = database
 
@@ -21,6 +20,6 @@ class KioskLogic:
                 self.db.log_transaction(book_id, action)
                 print(f"Current book balance: {balance + (1 if action == 'deposit' else -1)}")
             else:
-                print("Book information not found. Please try again.")
+                print(f"Book information not found for ISBN: {isbn}. Please try again.")
         else:
             print("No barcode scanned. Please try again.")

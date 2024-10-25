@@ -26,7 +26,7 @@ def main():
     scanner = BarcodeScanner()
     book_api = BookAPI(api_url, api_key)
     db = Database('books.db')
-    kiosk = KioskLogic(scanner, book_api, db)
+    kiosk = KioskLogic(book_api, db)
 
     print("Book Exchange Kiosk is ready!")
     print("Do you want to populate the database with test data? (y/n)")
