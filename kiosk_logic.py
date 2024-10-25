@@ -4,8 +4,7 @@ class KioskLogic:
         self.book_api = book_api
         self.db = database
 
-    def process_transaction(self):
-        isbn = self.scanner.read_barcode()
+    def process_transaction(self, isbn):
         if isbn:
             book_info = self.book_api.get_book_info(isbn)
             if book_info:
